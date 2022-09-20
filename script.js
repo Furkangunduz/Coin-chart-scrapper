@@ -33,6 +33,7 @@ async function getScreenShot(currencie) {
         await page.click(cookieCloseSelector)
         await page.evaluate(() => { window.scrollBy(0, 600); })
         await page.waitForSelector(canvasSelector);
+        await page.mouse.move(0, 0);
         const element = await page.$(canvasSelector);
         await element.screenshot({ path: 'chart.png' });
     } catch (error) {
