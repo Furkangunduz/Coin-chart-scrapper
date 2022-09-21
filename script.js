@@ -15,20 +15,21 @@ cloudinary.config({
 });
 
 async function getScreenShot(currencie) {
-    const browser = await puppeteer.launch({
-        headless: false,
-        defaultViewport: null,
-        'args': [
-            "--incognito",
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-        ]
-    });
-    const page = await browser.newPage();
-    const URL = base_url + currencie
-
-    await page.goto(URL);
     try {
+        const browser = await puppeteer.launch({
+            headless: false,
+            defaultViewport: null,
+            'args': [
+                "--incognito",
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+            ]
+        });
+        const page = await browser.newPage();
+        const URL = base_url + currencie
+
+        await page.goto(URL);
+
         await page.waitForSelector(cookieCloseSelector)
         await page.click(cookieCloseSelector)
         await page.evaluate(() => { window.scrollBy(0, 600); })
@@ -36,11 +37,12 @@ async function getScreenShot(currencie) {
         await page.mouse.move(0, 0);
         const element = await page.$(canvasSelector);
         await element.screenshot({ path: 'chart.png' });
-    } catch (error) {
 
+        console.log('done');
+        await browser.close();
+    } catch (e) {
+        console.log("Our Error", e)
     }
-    await browser.close();
-    return 0;
 }
 
 const uploadImg = async () => {
