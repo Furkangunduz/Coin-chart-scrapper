@@ -11,20 +11,22 @@ app.use(cors())
 
 
 app.get('/', (req, res) => {
-    res.send('hello world')
+    res.send('For using this api please add coin shortening name \nlike /btc\n/eth')
 })
 
 app.get('/:coinName', async (req, res) => {
-    let coinName = req.params.coinName.toUpperCase()
+    let coinName = req.params?.coinName.toUpperCase()
 
     if (coinName == "" || coinName == undefined) {
-        res.status(404)
-        throw new Error("Should provide coin name.")
+        res.status(404).send("Should provide coin name.")
     }
     if (coinList[coinName]) {
         await getScreenShot(coinList[coinName])
         let uploadedUrl = await uploadImg()
         res.status(200).json({ data: { url: uploadedUrl } })
+    }
+    else {
+        res.status(404).json({ error: `Can not find ${coinName} . ` })
     }
     return
 })

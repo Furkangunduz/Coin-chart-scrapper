@@ -2,9 +2,22 @@ const puppeteer = require("puppeteer");
 require("dotenv").config()
 
 const base_url = "https://coinmarketcap.com/currencies/"
-const canvasSelector = "#__next > div > div.main-content > div.sc-57oli2-0.comDeo.cmc-body-wrapper > div > div.sc-16r8icm-0.jKrmxw.container > div > div.sc-16r8icm-0.sc-19zk94m-1.gRSJaB > div.sc-16r8icm-0.dSXRna > div:nth-child(1) > div > div > div > div:nth-child(3) > div > div.tk0ro3-0.ckaobf > div > div > div:nth-child(3) > div.chart-wrapper > div.chart > div > table"
-const cookieCloseSelector = "#cmc-cookie-policy-banner > div.cmc-cookie-policy-banner__close"
-const coinList = { "BTC": "bitcoin" }
+const canvasSelector = "div.chart-wrapper"
+
+
+const coinList = {
+    "BTC": "bitcoin",
+    "ETH": "ethereum",
+    "USDT": "tether",
+    "BNB": "binance-usd",
+    "XRP": "xrp",
+    "ADA": "cardano",
+    "SOL": "solana",
+    "DOT": "polkadot",
+    "DOGE": "dogecoin",
+    "TRX": "tron",
+    "AVAX": "avalanche",
+}
 
 const cloudinary = require("cloudinary").v2
 
@@ -15,25 +28,28 @@ cloudinary.config({
 });
 
 async function getScreenShot(currencie) {
+    const browser = await puppeteer.launch({
+        headless: true,
+        defaultViewport: null,
+        'args': [
+            "--incognito",
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+        ]
+    });
     try {
-        const browser = await puppeteer.launch({
-            headless: true,
-            defaultViewport: null,
-            'args': [
-                "--incognito",
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-            ]
-        });
         const page = await browser.newPage();
         const URL = base_url + currencie
 
         await page.goto(URL);
 
-        await page.waitForSelector(cookieCloseSelector)
-        await page.click(cookieCloseSelector)
         await page.evaluate(() => { window.scrollBy(0, 600); })
         await page.waitForSelector(canvasSelector);
+        await page.evaluate(() => {
+            const cookiesBannerSelector = "#cmc-cookie-policy-banner"
+            let el = document.querySelector(cookiesBannerSelector)
+            if (el) el.style.display = "none"
+        })
         await page.mouse.move(0, 0);
         const element = await page.$(canvasSelector);
         await element.screenshot({ path: 'chart.png' });
@@ -42,6 +58,7 @@ async function getScreenShot(currencie) {
         await browser.close();
     } catch (e) {
         console.log("Our Error", e)
+        await browser.close();
     }
 }
 
