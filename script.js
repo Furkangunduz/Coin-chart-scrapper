@@ -28,7 +28,7 @@ cloudinary.config({
 
 async function getScreenShot(currencie) {
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         defaultViewport: null,
         'args': [
             "--incognito",
