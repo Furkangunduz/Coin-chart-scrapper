@@ -4,7 +4,6 @@ require("dotenv").config()
 const base_url = "https://coinmarketcap.com/currencies/"
 const canvasSelector = "div.chart-wrapper"
 
-
 const coinList = {
     "BTC": "bitcoin",
     "ETH": "ethereum",
@@ -29,7 +28,7 @@ cloudinary.config({
 
 async function getScreenShot(currencie) {
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         defaultViewport: null,
         'args': [
             "--incognito",
@@ -37,6 +36,7 @@ async function getScreenShot(currencie) {
             '--disable-setuid-sandbox',
         ]
     });
+
     try {
         const page = await browser.newPage();
         const URL = base_url + currencie
@@ -68,10 +68,10 @@ const uploadImg = async () => {
         if (err) {
             console.warn(err)
         } else {
-            url = image.url
+            url = "https" + image.url.substring(4)
         }
     })
-
+    console.log(url)
     return url
 }
 
