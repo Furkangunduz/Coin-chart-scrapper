@@ -27,17 +27,17 @@ cloudinary.config({
 });
 
 async function getScreenShot(currencie) {
-    const browser = await puppeteer.launch({
-        headless: true,
-        defaultViewport: null,
-        'args': [
-            "--incognito",
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-        ]
-    });
-
     try {
+        const browser = await puppeteer.launch({
+            headless: true,
+            defaultViewport: null,
+            'args': [
+                "--incognito",
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+            ]
+        });
+
         const page = await browser.newPage();
         const URL = base_url + currencie
 
@@ -58,7 +58,7 @@ async function getScreenShot(currencie) {
         await browser.close();
     } catch (e) {
         console.log("Our Error", e)
-        await browser.close();
+        return
     }
 }
 
@@ -71,7 +71,6 @@ const uploadImg = async () => {
             url = "https" + image.url.substring(4)
         }
     })
-    console.log(url)
     return url
 }
 
