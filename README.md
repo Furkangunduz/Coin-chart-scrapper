@@ -9,10 +9,11 @@ It returns you json which contains url of chart.
 <h3>Examples</h3>
 <p>
 
-* my-heart.herokuapp.com/btc
-* my-heart.herokuapp.com/eth
-* my-heart.herokuapp.com/avax
+* https://my-heart.herokuapp.com/btc
+* https://my-heart.herokuapp.com/eth
+* https://my-heart.herokuapp.com/avax
 
+* Paste this example urls to the search bar wait till server return you a json. You will get a url of chart. 
 </p>
 
 <h3>Returns</h3>
